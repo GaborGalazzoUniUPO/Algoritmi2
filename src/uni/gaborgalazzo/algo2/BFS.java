@@ -100,4 +100,37 @@ public class BFS {
         }
         return order;
     }
+
+    public ArrayList<Edge> getShortestPath(int sorg, int dest){
+        ArrayList<Integer> queue = new ArrayList<>();
+        ArrayList<Edge> shortestPath = new ArrayList<>();
+        int[] p = new int[graph.getOrder()];
+        Arrays.fill(p, -1);
+        boolean[] found = new boolean[graph.getOrder()];
+        queue.add(sorg);
+        while (!queue.isEmpty()){
+            Integer u = queue.remove(0);
+            if(!found[u]){
+                found[u] = true;
+                for(Integer v: graph.getNeighbors(u)) {
+                    if(!found[v]){
+                        p[v] = u;
+                        if(v == dest){
+                            int i = dest;
+                            while (i!=sorg){
+                                shortestPath.add(new Edge(p[i], i));
+                                i=p[i];
+                            }
+                            return shortestPath;
+                        }
+                    }
+                    queue.add(v);
+
+                }
+
+            }
+        }
+        return null;
+
+    }
 }

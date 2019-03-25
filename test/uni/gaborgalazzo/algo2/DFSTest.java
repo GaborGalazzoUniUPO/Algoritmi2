@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -174,5 +175,97 @@ public class DFSTest {
         assertEquals(1, orderPostVisit[2]);
         assertEquals(2, orderPostVisit[3]);
 
+    }
+
+    @Test
+    public void hasDirCycle() {
+        GraphInterface g1 = new DirectedGraph("1");
+        GraphInterface g2 = new DirectedGraph("2;0 1");
+        GraphInterface g3 = new DirectedGraph("3;0 1;1 2;0 2");
+        GraphInterface g4 = new DirectedGraph("3;0 2;2 1;1 0");
+        GraphInterface g5 = new DirectedGraph("5;4 0;4 1;4 2;2 3;3 4");
+
+        assertFalse(new DFS(g1).hasDirCycle());
+        assertFalse(new DFS(g2).hasDirCycle());
+        assertFalse(new DFS(g3).hasDirCycle());
+        assertTrue(new DFS(g4).hasDirCycle());
+        assertTrue(new DFS(g5).hasDirCycle());
+    }
+
+    @Test
+    public void getDirCycle() {
+
+        GraphInterface g1 = new DirectedGraph("1");
+        GraphInterface g2 = new DirectedGraph("2;0 1");
+        GraphInterface g3 = new DirectedGraph("3;0 1;1 2;0 2");
+        GraphInterface g4 = new DirectedGraph("3;0 2;2 1;1 0");
+        GraphInterface g5 = new DirectedGraph("5;4 0;4 1;4 2;2 3;3 4");
+
+        DFS dfs = new DFS(g1);
+        assertNull(dfs.getDirCycle());
+        dfs = new DFS(g2);
+        assertNull(dfs.getDirCycle());
+        dfs = new DFS(g3);
+        assertNull(dfs.getDirCycle());
+        dfs = new DFS(g4);
+        assertTrue(dfs.getDirCycle().containsAll(Arrays.asList(0,1,2)));
+        dfs = new DFS(g5);
+        assertTrue(dfs.getDirCycle().containsAll(Arrays.asList(4,2,3)));
+        assertFalse(dfs.getDirCycle().containsAll(Arrays.asList(0,1)));
+    }
+
+    @Test
+    public void isConnected() {
+        GraphInterface g = new UndirectedGraph("5;0 2;0 1;1 3;2 3");
+        DFS dfs = new DFS(g);
+        assertFalse(dfs.isConnected());
+
+        g = new DirectedGraph("3;0 1;1 2;2 0");
+        dfs = new DFS(g);
+        assertTrue(dfs.isConnected());
+    }
+
+    @Test
+    public void connectedComponents() {
+        GraphInterface g = new UndirectedGraph("5;0 2;0 1;1 3;2 3");
+        DFS dfs = new DFS(g);
+        assertTrue(Arrays.equals(dfs.connectedComponents(), new int[]{0,0,0,0,1}));
+    }
+
+    @Test
+    public void hasUndirectedCycle() {
+        GraphInterface g1 = new UndirectedGraph("1");
+        GraphInterface g2 = new UndirectedGraph("2;0 1");
+        GraphInterface g3 = new UndirectedGraph("3;0 1;1 2;0 2");
+        GraphInterface g4 = new UndirectedGraph("3;0 2;2 1;1 0");
+        GraphInterface g5 = new UndirectedGraph("5;4 0;4 1;4 2;2 3;3 4");
+
+        assertFalse(new DFS(g1).hasUndirectedCycle());
+        assertFalse(new DFS(g2).hasUndirectedCycle());
+        assertTrue(new DFS(g3).hasUndirectedCycle());
+        assertTrue(new DFS(g4).hasUndirectedCycle());
+        assertTrue(new DFS(g5).hasUndirectedCycle());
+    }
+
+    @Test
+    public void getUndirCycle() {
+
+        GraphInterface g1 = new UndirectedGraph("1");
+        GraphInterface g2 = new UndirectedGraph("2;0 1");
+        GraphInterface g3 = new UndirectedGraph("3;0 1;1 2;0 2");
+        GraphInterface g4 = new UndirectedGraph("3;0 2;2 1;1 0");
+        GraphInterface g5 = new UndirectedGraph("5;4 0;4 1;4 2;2 3;3 4");
+
+        DFS dfs = new DFS(g1);
+        assertNull(dfs.getUndirCycle());
+        dfs = new DFS(g2);
+        assertNull(dfs.getUndirCycle());
+        dfs = new DFS(g3);
+        assertTrue(dfs.getUndirCycle().containsAll(Arrays.asList(0,1,2)));
+        dfs = new DFS(g4);
+        assertTrue(dfs.getUndirCycle().containsAll(Arrays.asList(0,1,2)));
+        dfs = new DFS(g5);
+        assertTrue(dfs.getUndirCycle().containsAll(Arrays.asList(4,2,3)));
+        assertFalse(dfs.getUndirCycle().containsAll(Arrays.asList(0,1)));
     }
 }

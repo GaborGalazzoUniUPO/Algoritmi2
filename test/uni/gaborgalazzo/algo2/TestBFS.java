@@ -1,5 +1,6 @@
 package uni.gaborgalazzo.algo2;
 
+import it.uniupo.graphLib.Edge;
 import it.uniupo.graphLib.GraphInterface;
 import it.uniupo.graphLib.UndirectedGraph;
 import org.junit.FixMethodOrder;
@@ -158,5 +159,16 @@ public class TestBFS {
 
 
   }
-    
+
+    @Test
+    public void getShortestPath() {
+
+        GraphInterface g = new UndirectedGraph("6;4 0;4 1;4 2;2 3;3 4");
+
+        BFS bfs = new BFS(g);
+        ArrayList<Edge> sp = bfs.getShortestPath(0, 2);
+        assertEquals(2, sp.size());
+        assertTrue(sp.containsAll(Arrays.asList(new Edge(0, 4), new Edge(4, 2))));
+        assertNull(bfs.getShortestPath(0, 5));
+    }
 }

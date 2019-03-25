@@ -1,9 +1,11 @@
 package uni.gaborgalazzo.algo2;
 
+import it.uniupo.graphLib.DirectedGraph;
 import it.uniupo.graphLib.GraphInterface;
+import it.uniupo.graphLib.UndirectedGraph;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DFS {
 
@@ -135,6 +137,130 @@ public class DFS {
                 buildOrderTree(neighbor, found, orderPostVisit,level);
             }
         }
+    }
+
+    public boolean hasDirCycle(){
+        return getDirCycle()!=null;
+
+    }
+
+    public ArrayList<Integer> getDirCycle(){
+        if(!(graph instanceof DirectedGraph))
+            return null;
+        boolean[] s = new boolean[graph.getOrder()];
+        boolean[] e = new boolean[graph.getOrder()];
+        int[] p = new int[graph.getOrder()];
+        Arrays.fill(p, -1);
+        try {
+            for(int i = 0; i<graph.getOrder(); i++)
+                if(!s[i])
+                    buildDirCycleTree(i,s,e,p);
+            return null;
+        } catch (CycleFoundException e1) {
+            ArrayList<Integer> cycle = new ArrayList<>();
+            for(int i = 0; i<p.length; i++)
+                cycle.add(p[i]);
+            return cycle;
+        }
+
+    }
+
+    private void buildDirCycleTree(int source, boolean[] found, boolean[] ended,int[] parent) throws CycleFoundException {
+        if(source < 0 || source >= found.length || found[source])
+            throw new IllegalArgumentException();
+        found[source] = true;
+        for(Integer neighbor: graph.getNeighbors(source)){
+            parent[neighbor] = source;
+            if(!found[neighbor]){
+                buildDirCycleTree(neighbor, found, ended, parent);
+            }else if(!ended[neighbor])
+            {
+                throw new CycleFoundException();
+            }
+        }
+        ended[source] = true;
+
+    }
+
+    public boolean isConnected(){
+        try {
+            getTree(0);
+            return true;
+        } catch (NotAllNodesReachedException e) {
+            return false;
+        }
+    }
+
+    public int[] connectedComponents(){
+
+        boolean[] s = new boolean[graph.getOrder()];
+        int[] p = new int[graph.getOrder()];
+        int[] ccA = new int[graph.getOrder()];
+        Arrays.fill(ccA, -1);
+        int cc = 0;
+        for(int i = 0; i<graph.getOrder(); i++)
+            if(!s[i]) {
+                buildCCArray(i, s, p, cc++, ccA);
+            }
+
+        return ccA;
+    }
+
+    private void buildCCArray(int source, boolean[] found, int[] parent, int cc, int[] ccA){
+        if(source < 0 || source >= found.length || found[source])
+            throw new IllegalArgumentException();
+        found[source] = true;
+        ccA[source] = cc;
+        for(Integer neighbor: graph.getNeighbors(source)){
+            if(!found[neighbor]){
+                parent[neighbor] = source;
+                buildCCArray(neighbor, found, parent, cc, ccA);
+            }
+        }
+    }
+
+    public boolean hasUndirectedCycle(){
+        return getUndirCycle()!=null;
+
+    }
+
+    public ArrayList<Integer> getUndirCycle(){
+        if(!(graph instanceof UndirectedGraph))
+            return null;
+        boolean[] s = new boolean[graph.getOrder()];
+        boolean[] e = new boolean[graph.getOrder()];
+        int[] p = new int[graph.getOrder()];
+        Arrays.fill(p, -1);
+        try {
+            for(int i = 0; i<graph.getOrder(); i++)
+                if(!s[i])
+                    buildUndirCycleTree(i,s,e,p);
+            return null;
+        } catch (CycleFoundException e1) {
+            ArrayList<Integer> cycle = new ArrayList<>();
+            for(int i = 0; i<p.length; i++)
+                cycle.add(p[i]);
+            return cycle;
+        }
+
+    }
+
+    private void buildUndirCycleTree(int source, boolean[] found, boolean[] ended,int[] parent) throws CycleFoundException {
+        if(source < 0 || source >= found.length || found[source])
+            throw new IllegalArgumentException();
+        found[source] = true;
+        for(Integer neighbor: graph.getNeighbors(source)){
+            if(!found[neighbor]){
+                parent[neighbor] = source;
+                buildUndirCycleTree(neighbor, found, ended, parent);
+            }else if(!ended[neighbor] && parent[source]!=neighbor)
+            {
+                parent[neighbor] = source;
+                throw new CycleFoundException();
+            }
+        }
+        ended[source] = true;
+
     }
 
 }
