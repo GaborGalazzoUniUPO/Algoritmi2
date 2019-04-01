@@ -34,14 +34,12 @@ public class Metro {
 
         if(parent[destStop] == -1)
             return null;
-
         ArrayList<Integer> stops = new ArrayList<>();
         int p = destStop;
         while (p!=startStop){
             stops.add(0, p);
             p=parent[p];
         }
-
         return  stops;
     }
 }
