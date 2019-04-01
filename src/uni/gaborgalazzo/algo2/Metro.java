@@ -27,7 +27,8 @@ public class Metro {
                 found[node] = true;
                 for(Integer n : map.getNeighbors(node)){
                     queue.add(n);
-                    parent[n] = node;
+                    if(!found[n])
+                        parent[n] = node;
                 }
             }
         }
