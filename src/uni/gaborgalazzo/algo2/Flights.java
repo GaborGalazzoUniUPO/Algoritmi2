@@ -47,7 +47,7 @@ public class Flights {
     }
 
     public int minimumTime(int departure, int arrival){
-        GraphInterface link = dijkstra.getMinimumPathsTree(departure);
+        GraphInterface links = dijkstra.getMinimumPathsTree(departure);
         boolean[] found = new boolean[links.getOrder()];
         ArrayList<Edge> queue = new ArrayList<>();
         for(Edge e: links.getOutEdges(departure))
