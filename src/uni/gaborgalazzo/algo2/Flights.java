@@ -2,9 +2,6 @@ package uni.gaborgalazzo.algo2;
 
 import it.uniupo.graphLib.DirectedGraph;
 import it.uniupo.graphLib.Edge;
-import it.uniupo.graphLib.GraphInterface;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -47,25 +44,7 @@ public class Flights {
     }
 
     public int minimumTime(int departure, int arrival){
-        GraphInterface links = dijkstra.getMinimumPathsTree(departure);
-        boolean[] found = new boolean[links.getOrder()];
-        ArrayList<Edge> queue = new ArrayList<>();
-        for(Edge e: links.getOutEdges(departure))
-            queue.add(e);
-        int[] times = new int[links.getOrder()];
-        Arrays.fill(times, -1);
-        found[departure] = true;
-        times[departure] = 0;
-        while (!queue.isEmpty()){
-            Edge e = queue.remove(0);
-            if(!found[e.getHead()]){
-                found[e.getHead()] = true;
-                times[e.getHead()]=times[e.getTail()]+e.getWeight();
-                for(Edge n: links.getOutEdges(e.getHead()))
-                    queue.add(n);
-            }
-        }
-        return times[arrival];
+       return dijkstra.getDistances(departure)[arrival];
     }
 
     public ArrayList<Edge> fastestPath(int departure, int arrival){
