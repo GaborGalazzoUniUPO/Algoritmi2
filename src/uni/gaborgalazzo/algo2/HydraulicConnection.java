@@ -59,7 +59,7 @@ public class HydraulicConnection {
 
         found[connectionPoint] = true;
         for(Edge e: map.getOutEdges(connectionPoint)){
-            heap.add(e, pipeCostProp[connectionPoint] + e.getWeight());
+            heap.add(e, e.getWeight());
         }
         while (!heap.isEmpty()){
             Edge e = heap.extractMin();
