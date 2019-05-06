@@ -267,7 +267,6 @@ public class DFS {
 
         if (!isDag())
             throw new IllegalArgumentException();
-
         int[] orderPostVisit = new int[graph.getOrder()];
         boolean[] s = new boolean[graph.getOrder()];
         int[] order = new int[]{0};
@@ -294,7 +293,6 @@ public class DFS {
         ArrayList<Integer> result = new ArrayList<>();
         int[] r = new int[graph.getOrder()];
         for(int i = 0; i < orderPostVisit.length; i++){
-            //result.add(orderPostVisit[i], i);
             r[orderPostVisit[i]] = i;
         }
         for(int i = 0; i < r.length; i++){
